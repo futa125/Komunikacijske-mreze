@@ -1,0 +1,21 @@
+Prvi korak:	Izgeneriraj hash of datoteke
+		$ openssl dgst -sha256 0036522493.imn > hash
+		
+		$ cat hash
+		SHA256(0036522493.imn)= e35aa13008717053778cc2ce77e2b7d81497a845162e71abddda33bbb24d3a3c
+
+Drugi korak:	Generiraj private i public key
+		$ openssl genrsa -out private.pem 2048
+		$ openssl rsa -in private.pem -outform PEM -pubout -out 0036522493.pem
+
+Treći korak:	Potpiši hash pomoću private key-a
+		$ openssl rsautl -sign -inkey private.pem -keyform PEM -in hash > 0036522493.sig
+
+
+Četvrti korak:	Provjera rezultata
+		$ openssl rsautl -verify -inkey 0036522493.pem -pubin -keyform PEM -in 0036522493.sig
+		SHA256(0036522493.imn)= e35aa13008717053778cc2ce77e2b7d81497a845162e71abddda33bbb24d3a3c
+	
+		
+		$ sha256sum 0036522493.imn
+		e35aa13008717053778cc2ce77e2b7d81497a845162e71abddda33bbb24d3a3c  0036522493.imn
